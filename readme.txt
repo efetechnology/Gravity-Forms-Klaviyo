@@ -11,6 +11,11 @@ Easily integrate Klaviyo with your Gravity Forms.
 
 == Description ==
 
+Klaviyo: https://www.klaviyo.com/
+Sell more by using data to drive your marketing
+
+Klaviyo makes it easy for ecommerce marketers to target, personalize, measure and optimize email and Facebook campaigns. And it only takes a few minutes to get started.
+
 INTEGRATE KLAVIYO WITH GRAVITY FORMS
 If you use Klaviyo email service and the Gravity Forms plugin, you’re going to want this plugin!
 
