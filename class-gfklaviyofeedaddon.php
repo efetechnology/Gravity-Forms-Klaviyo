@@ -163,13 +163,11 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 							),
 							array(
                                 'name'     => 'first_name',
-                                'label'    => esc_html__( 'First Name', 'klaviyoaddon' ),
-                                'required' => true
+                                'label'    => esc_html__( 'First Name', 'klaviyoaddon' )
                             ),
                             array(
                                 'name'     => 'last_name',
-                                'label'    => esc_html__( 'Last Name', 'klaviyoaddon' ),
-                                'required' => true
+                                'label'    => esc_html__( 'Last Name', 'klaviyoaddon' )
                             ),
 						),
 					),
