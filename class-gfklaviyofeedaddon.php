@@ -27,22 +27,6 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 		return self::$_instance;
 	}
 
-	/**
-	 * Plugin starting point. Handles hooks, loading of language files and PayPal delayed payment support.
-	 */
-	public function init() {
-
-		parent::init();
-
-		$this->add_delayed_payment_support (
-			array(
-				'option_label' => esc_html__( 'Subscribe contact to service x only when payment is received.', 'klaviyoaddon' )
-			)
-		);
-
-	}
-
-
 	// # FEED PROCESSING -----------------------------------------------------------------------------------------------
 
 	/**
@@ -70,54 +54,50 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 
 		}
 
-		// Send the values to the third-party service.
+		// Send a custom event to show the form was interacted with 
         if ($this->get_plugin_setting('api_key')) {
             $tracker = new Klaviyo($this->get_plugin_setting('api_key'));
             $tracker->track (
-                'Active on Site',
-                array('$email' => $merge_vars['email'], '$first_name' => $merge_vars['first_name'], '$last_name' => $merge_vars['last_name'])
-            // array('Item SKU' => 'ABC123', 'Payment Method' => 'Credit Card'),
-            // 1354913220
+                'GravityForm Submitted',
+                array(
+					'$email' => $merge_vars['email']
+				),
+				array(
+					'Form' => $form['title']
+				)
             );
         }
 
         if ($this->get_plugin_setting('private_api_key')) {
-        	$url = 'https://a.klaviyo.com/api/v1/list/' .$list_id. '/members';
+			$url = 'https://a.klaviyo.com/api/v2/list/' .$list_id. '/subscribe';
+			
+			$post_data = array(
+				'api_key' => $this->get_plugin_setting('private_api_key'),
+				'profiles' => array(array(
+					'email' => $merge_vars['email'],
+					'$consent' => 'email',
+					'$source' => 'GravityForms: ' . $form['title']
+				))
+			);
 
-        	wp_remote_post($url,array(
-        		'body' => array(
-        			'api_key' => $this->get_plugin_setting('private_api_key'),
-        			'email' => $merge_vars['email'],
-        			'properties' => json_encode(array(
-        				'$first_name' => $merge_vars['first_name'],
-        				'$last_name' => $merge_vars['last_name']
-        			)),
-        			'confirm_optin' => 'false'
-        		)
-        	));
+			if(isset($merge_vars['first_name']))
+				$post_data['profiles'][0]['$first_name'] = $merge_vars['first_name'];
+
+			if(isset($merge_vars['last_name']))
+				$post_data['profiles'][0]['$last_name'] = $merge_vars['last_name'];
+
+        	$response = wp_safe_remote_post($url, array(
+				'method' => 'POST',
+				'headers' => array('content-type' => 'application/json'),
+				'body' => json_encode($post_data)
+			));
+			
+			//If the Klaviyo API returns a code anything other than OK, log it!
+			if($response['response']['code'] != 200) {
+				$this->log_error( __METHOD__ . '(): Could not add user to mailing list' );
+				$this->log_error( __METHOD__ . '(): response => ' . print_r( $response, true ) );
+			}
         }
-	}
-
-	/**
-	 * Custom format the phone type field values before they are returned by $this->get_field_value().
-	 *
-	 * @param array $entry The Entry currently being processed.
-	 * @param string $field_id The ID of the Field currently being processed.
-	 * @param GF_Field_Phone $field The Field currently being processed.
-	 *
-	 * @return string
-	 */
-	public function get_phone_field_value( $entry, $field_id, $field ) {
-
-		// Get the field value from the Entry Object.
-		$field_value = rgar( $entry, $field_id );
-
-		// If there is a value and the field phoneFormat setting is set to standard reformat the value.
-		if ( ! empty( $field_value ) && $field->phoneFormat == 'standard' && preg_match( '/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/', $field_value, $matches ) ) {
-			$field_value = sprintf( '%s-%s-%s', $matches[1], $matches[2], $matches[3] );
-		}
-
-		return $field_value;
 	}
 
 	// # ADMIN FUNCTIONS -----------------------------------------------------------------------------------------------
@@ -188,13 +168,11 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 							),
 							array(
                                 'name'     => 'first_name',
-                                'label'    => esc_html__( 'First Name', 'klaviyoaddon' ),
-                                'required' => true
+                                'label'    => esc_html__( 'First Name', 'klaviyoaddon' )
                             ),
                             array(
                                 'name'     => 'last_name',
-                                'label'    => esc_html__( 'Last Name', 'klaviyoaddon' ),
-                                'required' => true
+                                'label'    => esc_html__( 'Last Name', 'klaviyoaddon' )
                             ),
 						),
 					),
