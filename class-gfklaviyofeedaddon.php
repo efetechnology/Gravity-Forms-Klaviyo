@@ -98,28 +98,6 @@ class GFKlaviyoAPI extends GFFeedAddOn {
         }
 	}
 
-	/**
-	 * Custom format the phone type field values before they are returned by $this->get_field_value().
-	 *
-	 * @param array $entry The Entry currently being processed.
-	 * @param string $field_id The ID of the Field currently being processed.
-	 * @param GF_Field_Phone $field The Field currently being processed.
-	 *
-	 * @return string
-	 */
-	public function get_phone_field_value( $entry, $field_id, $field ) {
-
-		// Get the field value from the Entry Object.
-		$field_value = rgar( $entry, $field_id );
-
-		// If there is a value and the field phoneFormat setting is set to standard reformat the value.
-		if ( ! empty( $field_value ) && $field->phoneFormat == 'standard' && preg_match( '/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/', $field_value, $matches ) ) {
-			$field_value = sprintf( '%s-%s-%s', $matches[1], $matches[2], $matches[3] );
-		}
-
-		return $field_value;
-	}
-
 	// # ADMIN FUNCTIONS -----------------------------------------------------------------------------------------------
 
 
