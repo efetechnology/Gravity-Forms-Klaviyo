@@ -54,12 +54,17 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 
 		}
 
-		// Send the values to the third-party service.
+		// Send a custom event to show the form was interacted with 
         if ($this->get_plugin_setting('api_key')) {
             $tracker = new Klaviyo($this->get_plugin_setting('api_key'));
             $tracker->track (
-                'Active on Site',
-                array('$email' => $merge_vars['email'], '$first_name' => $merge_vars['first_name'], '$last_name' => $merge_vars['last_name'])
+                'GravityForm Submitted',
+                array(
+					'$email' => $merge_vars['email']
+				),
+				array(
+					'Form' => $form['title']
+				)
             );
         }
 
