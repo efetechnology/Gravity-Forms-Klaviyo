@@ -27,22 +27,6 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 		return self::$_instance;
 	}
 
-	/**
-	 * Plugin starting point. Handles hooks, loading of language files and PayPal delayed payment support.
-	 */
-	public function init() {
-
-		parent::init();
-
-		$this->add_delayed_payment_support (
-			array(
-				'option_label' => esc_html__( 'Subscribe contact to service x only when payment is received.', 'klaviyoaddon' )
-			)
-		);
-
-	}
-
-
 	// # FEED PROCESSING -----------------------------------------------------------------------------------------------
 
 	/**
