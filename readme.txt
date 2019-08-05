@@ -1,5 +1,6 @@
 === Gravity Forms Klaviyo ===
 Contributors: EFE Technology
+Plugin URI: https://wordpress.org/plugins/gf-klaviyo-add-on/
 Donate link: http://efe.com.vn
 Tags: klaviyo,gravity forms,forms
 Requires at least: 4.0
@@ -20,6 +21,8 @@ INTEGRATE KLAVIYO WITH GRAVITY FORMS
 If you use Klaviyo email service and the Gravity Forms plugin, you’re going to want this plugin!
 
 Integrate your Gravity Forms forms so that when users submit a form entry, the entries get added to Klaviyo. Link Email, First Name, Last Name with Klaviyo!
+
+See the plugin on our [GitHub](https://github.com/efetechnology/Gravity-Forms-Klaviyo/)
 
 == Installation ==
 
