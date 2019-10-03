@@ -93,9 +93,14 @@ class GFKlaviyoAPI extends GFFeedAddOn {
 			));
 			
 			//If the Klaviyo API returns a code anything other than OK, log it!
-			if($response['response']['code'] != 200) {
-				$this->log_error( __METHOD__ . '(): Could not add user to mailing list' );
-				$this->log_error( __METHOD__ . '(): response => ' . print_r( $response, true ) );
+			if ( is_wp_error( $response ) ) {
+				$this->log_error( __METHOD__ . '(): Could not add user to mailing list. ' . $response->get_error_message() );
+			}
+			else {
+				if($response['response']['code'] != 200) {
+					$this->log_error( __METHOD__ . '(): Could not add user to mailing list' );
+					$this->log_error( __METHOD__ . '(): response => ' . print_r( $response, true ) );
+				}
 			}
         }
 	}
