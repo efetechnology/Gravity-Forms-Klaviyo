@@ -12,6 +12,15 @@ class Klaviyo {
         $this->api_key = $api_key;
     }
     
+    /**
+     * Sends tracking event for the associated user
+     *
+     * @param string    $event                  Name of the event.
+     * @param array     $customer_properties    Custom information about the person who did this event.
+     * @param array     $properties             Custom information about this event.
+     * @param int       $timestamp              UNIX timestamp for when this event occurred.
+     * @return boolean                          True if the request was successful.
+     */
     function track($event, $customer_properties=array(), $properties=array(), $timestamp=NULL) {
         if ((!array_key_exists('$email', $customer_properties) || empty($customer_properties['$email']))
             && (!array_key_exists('$id', $customer_properties) || empty($customer_properties['$id']))) {
