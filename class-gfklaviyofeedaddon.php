@@ -248,23 +248,18 @@ class GFKlaviyoAPI extends GFFeedAddOn {
         $private_key = $this->get_plugin_setting('private_api_key');
 
         if ($private_key) {
-			$url = 'https://a.klaviyo.com/api/v1/lists?api_key=' . $private_key;
+			$url = 'https://a.klaviyo.com/api/v2/lists?api_key=' . $private_key;
 	       	$response = wp_remote_get($url);
 
-	       	$data = json_decode($response['body']);
-
-            /* Get available Klaviyo lists. */
-	        $ac_lists = $data->data;
+	       	$data = json_decode($response['body']);	    
 
 	        /* Add Klaviyo lists to array and return it. */
 	        $lists = array();
-            foreach ( $ac_lists as $list ) {
-                if ($list->list_type == 'list') {
-                    $lists[] = array(
-                        'label' => $list->name,
-                        'value' => $list->id
-                    );
-                }
+            foreach ( $data as $list ) {
+				$lists[] = array(
+					'label' => $list->list_name,
+					'value' => $list->list_id
+				);                
             }
         }
 
