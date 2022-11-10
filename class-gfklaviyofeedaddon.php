@@ -82,7 +82,7 @@ class GFKlaviyoAPI extends GFFeedAddOn {
         }
 
         if ($this->get_plugin_setting('private_api_key')) {
-        	$url = 'https://a.klaviyo.com/api/v1/list/' .$list_id. '/members';
+        	$url = 'https://a.klaviyo.com/api/v2/list/' .$list_id. '/subscribe';
 
         	wp_remote_post($url,array(
         		'body' => array(
